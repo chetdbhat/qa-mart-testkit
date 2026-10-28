@@ -1,0 +1,8 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "qa-mart-testkit",
+  "version": "1.0.0",
+  "description": "Evidence-first QA Mart smoke testing with Playwright, scoped agents, and safety hooks.",
+  "keywords": ["qamart", "playwright", "testing", "copilot"],
+  "extensions": { "com.github.copilot": {} }
+}

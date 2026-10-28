@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [{
+      "type": "command",
+      "command": "node \"${PLUGIN_ROOT}/scripts/guard-tool.cjs\"",
+      "timeoutSec": 10
+    }],
+    "postToolUse": [{
+      "type": "command",
+      "command": "node \"${PLUGIN_ROOT}/scripts/lint-edits.cjs\"",
+      "timeoutSec": 10
+    }]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "qa-mart-testkit",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "validate": "node scripts/validate.mjs",
+    "test:e2e": "playwright test",
+    "demo": "playwright test --project=chromium",
+    "demo:validation": "playwright test tests/e2e/login.spec.mjs tests/e2e/checkout.spec.mjs --project=chromium",
+    "verify:mcp": "node scripts/verify-mcp.mjs",
+    "verify:clean": "node scripts/clean-install.mjs",
+    "verify:clean:validation": "node scripts/clean-install.mjs --validation-only",
+    "build:plugin": "node scripts/build-dist.mjs",
+    "package:plugin": "node scripts/build-dist.mjs && npm pack ./.artifacts/dist/qa-mart-testkit"
+  },
+  "files": ["plugin.json", "mcp.json", "com.github.copilot", "skills", "scripts", "tests", "playwright.config.mjs", "README.md", "docs", ".github/plugin", "npm-shrinkwrap.json"],
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "@modelcontextprotocol/sdk": "1.25.2",
+    "yaml": "2.8.1",
+    "ajv": "8.17.1"
+  },
+  "engines": { "node": ">=22" }
+}

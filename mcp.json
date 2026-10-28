@@ -1,0 +1,14 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "qamart-browser": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["--yes", "@playwright/mcp@0.0.83", "--headless", "--isolated", "--browser", "chromium", "--allowed-origins", "https://qamart.vercel.app", "--blocked-origins", "https://checkout.stripe.com;https://www.paypal.com"]
+    },
+    "qamart-docs": {
+      "type": "streamable-http",
+      "url": "https://learn.microsoft.com/api/mcp"
+    }
+  }
+}
