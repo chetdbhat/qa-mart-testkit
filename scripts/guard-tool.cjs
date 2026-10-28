@@ -1,6 +1,6 @@
 const fs = require('node:fs');
 const { spawnSync } = require('node:child_process');
-const { parseEvent, proposedText, focused, specPath, editTool } = require('./test-policy.cjs');
+const { auditHook, parseEvent, proposedText, focused, specPath, editTool } = require('./test-policy.cjs');
 
 function deny(reason) {
   process.stdout.write(JSON.stringify({ permissionDecision: 'deny', permissionDecisionReason: reason }));
@@ -8,6 +8,7 @@ function deny(reason) {
 
 try {
   const event = parseEvent(fs.readFileSync(0, 'utf8'));
+  auditHook('preToolUse', event.name);
   const text = JSON.stringify(event.args);
   if (editTool.test(event.name) && focused.test(proposedText(event.args))) {
     deny('QA Mart guard: test.only/describe.only/it.only would hide coverage.');

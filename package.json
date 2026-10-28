@@ -1,6 +1,6 @@
 {
   "name": "qa-mart-testkit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,6 +12,8 @@
     "verify:mcp": "node scripts/verify-mcp.mjs",
     "verify:clean": "node scripts/clean-install.mjs",
     "verify:clean:validation": "node scripts/clean-install.mjs --validation-only",
+    "verify:live": "node scripts/verify-live.mjs",
+    "verify:live:generate": "node scripts/verify-live.mjs --generate",
     "build:plugin": "node scripts/build-dist.mjs",
     "package:plugin": "node scripts/build-dist.mjs && npm pack ./.artifacts/dist/qa-mart-testkit"
   },

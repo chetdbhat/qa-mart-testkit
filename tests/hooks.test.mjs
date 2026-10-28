@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -13,6 +13,25 @@ function invoke(script, event) {
   return JSON.parse(result.stdout);
 }
 const base = { cwd: process.cwd(), toolName: 'create', toolArgs: {} };
+
+test('opt-in hook audit records lifecycle and tool metadata without tool arguments', () => {
+  const directory = mkdtempSync(path.join(tmpdir(), 'qamart-audit-'));
+  try {
+    for (const script of ['guard-tool.cjs', 'lint-edits.cjs']) {
+      const result = spawnSync(process.execPath, [path.join(scripts, script)], {
+        input: JSON.stringify({ ...base, toolName: 'view', toolArgs: { content: 'sensitive-fixture-not-to-log' } }),
+        encoding: 'utf8', env: { ...process.env, QAMART_HOOK_AUDIT_DIR: directory }
+      });
+      assert.equal(result.status, 0, result.stderr);
+      JSON.parse(result.stdout);
+    }
+    const raw = readFileSync(path.join(directory, 'hooks.jsonl'), 'utf8');
+    const entries = raw.trim().split('\n').map(line => JSON.parse(line));
+    assert.deepEqual(entries.map(entry => entry.hook), ['preToolUse', 'postToolUse']);
+    assert.ok(entries.every(entry => entry.tool === 'view' && entry.timestamp));
+    assert.ok(!raw.includes('sensitive-fixture-not-to-log'));
+  } finally { rmSync(directory, { recursive: true, force: true }); }
+});
 
 test('pre hook blocks focused tests in create, edit, and patch payloads', () => {
   for (const toolName of ['create', 'edit', 'apply_patch', 'Write', 'Edit']) {

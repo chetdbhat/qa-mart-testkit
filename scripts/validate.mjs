@@ -7,6 +7,20 @@ const manifest = JSON.parse(readFileSync(new URL('plugin.json', root), 'utf8'));
 assert.equal(manifest.$schema, 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json');
 assert.equal(manifest.name, 'qa-mart-testkit');
 assert.ok(manifest.extensions['com.github.copilot']);
+const packageJson = JSON.parse(readFileSync(new URL('package.json', root), 'utf8'));
+const lock = JSON.parse(readFileSync(new URL('package-lock.json', root), 'utf8'));
+const marketplace = JSON.parse(readFileSync(new URL('.github/plugin/marketplace.json', root), 'utf8'));
+assert.equal(packageJson.version, manifest.version);
+assert.equal(lock.version, manifest.version);
+assert.equal(lock.packages[''].version, manifest.version);
+assert.equal(marketplace.plugins[0].version, manifest.version);
+for (const dependency of Object.values(lock.packages)) {
+	if (dependency.resolved) {
+		assert.equal(new URL(dependency.resolved).origin, 'https://registry.npmjs.org', 'Dependencies must install from public npm');
+		assert.ok(dependency.integrity);
+	}
+}
+console.log(`PASS: version ${manifest.version} metadata and integrity-pinned public npm lockfile`);
 const components = [
 	['rules', 'com.github.copilot/rules', '.instructions.md'],
 	['prompts', 'com.github.copilot/commands', '.prompt.md'],

@@ -3,6 +3,9 @@
 Validation date: 2026-10-28. Target: https://qamart.vercel.app, discovered public QA Mart sandbox.
 No project URL or source was provided. Confirm that this is the cohort's intended deployment.
 
+Published repository: https://github.com/chetdbhat/qa-mart-testkit
+Current package update: 1.0.1. Authentication and live agent verification were completed after the initial blocked attempt.
+
 ## Verified
 
 | Check | Result | Evidence |
@@ -11,7 +14,7 @@ No project URL or source was provided. Confirm that this is the cohort's intende
 | Official JSON schemas | PASS, exit 0 | plugin.json and mcp.json validated against the published Agent Plugins 1.0 schemas with Ajv |
 | Real CLI installation | PASS, exit 0 | Copilot CLI 1.0.104 installed qa-mart-testkit 1.0.0 into a fresh COPILOT_HOME; inventory reports enabled |
 | Independent setup | PASS | Fresh temporary workspace and installed-plugin directory; independent npm ci, no source node_modules dependency |
-| Hook behavior | 7 passed, 0 failed, exit 0 | Rejects focused create/edit/patch, permits removal of .only, normal permission passthrough, camel/snake payloads, malformed input denial, actual post-edit lint/syntax check, workspace escape rejection |
+| Hook behavior | 8 passed, 0 failed, exit 0 | Focused-test guards, legitimate removal, input validation, post-edit lint, path containment, and metadata-only audit with no tool arguments |
 | Real cart test | PASS | Add Mech Keys 75, check bag, quantity increase/decrease, exact line/subtotal arithmetic in integer cents |
 | Real login boundary | PASS | Email/password required, empty values invalid, malformed email invalid, public demo-fill control available; no credentials submitted |
 | Real checkout boundary | PASS | Empty bag, six required delivery/contact fields, malformed email invalid; no order submitted |
@@ -24,10 +27,17 @@ No project URL or source was provided. Confirm that this is the cohort's intende
 | Always-on rule fallback | PASS | setup-workspace.mjs generated a native .github/copilot-instructions.md in a fresh workspace; copilot instruction list discovers it. Native plugin-rule injection remains unverified |
 | Default-profile install | PASS, exit 0 | Curated plugin installed for the current user as well as the isolated test profile |
 | Editor diagnostics | PASS | No diagnostics in scripts, specs, and Copilot component folders at validation time |
+| Public npm portability | PASS | 98 lockfile URLs normalized to HTTPS public npm; independent npm ci succeeded with integrity hashes retained |
+| Authenticated review prompt | PASS, exit 0 | qa-mart-testkit:qamart-planner completed /review-flaky-test, read both rules and bug-report skill directly, made zero edits; 4 preToolUse and 4 postToolUse events |
+| Authenticated generator prompt | PASS, exit 0 | qa-mart-testkit:qamart-generator used real checkout browser tools and generated an isolated runnable spec via /gen-smoke-tests; 7 preToolUse and 6 postToolUse events |
+| Plugin-generated real tests | 7 passed, 0 failed, exit 0 | Six required contact/delivery cases plus malformed email; real QA Mart Chromium run, 46.2 seconds; no order submission |
+| GitHub publication | PASS | Authenticated Git Data API commit verified against remote manifest; no local Git dependency for publishing |
+| Published-repository installation | PASS, exit 0 | chetdbhat/qa-mart-testkit installed and enabled in a separate COPILOT_HOME using checksum-verified portable Git; initial remote version 1.0.0 |
 
 Machine-local proof: `.artifacts/clean-install-proof.json`, `.artifacts/last-clean-install-attempt.json`, and `.artifacts/mcp-proof.json`. Read the scope field; a validation-only run does not cover cart.
 The clean-install proof records the temporary installed path; its HTML report is under that path's playwright-report directory.
 Raw reports, traces, browser caches, local paths, and credentials are not published as repository content.
+Additional local proof: `.artifacts/live-verification/proof.json`, `.artifacts/live-generation/proof.json`, and `.artifacts/publish-proof.json`. Sanitized counts are recorded here; raw model transcripts remain ignored.
 
 ## Observed Limitations
 
@@ -36,23 +46,20 @@ Raw reports, traces, browser caches, local paths, and credentials are not publis
 - The public demo-fill/sign-in exploration did not redirect or show an alert. Positive authentication is not verified; no credential values were saved. The included auth spec tests validation only.
 - An exploratory bag-to-checkout navigation showed an empty order summary. Cart persistence through checkout is unverified and is not covered by the empty-checkout boundary spec.
 - The runner and pinned MCP need different browser builds. Both setup commands are in the README. The clean install reused this machine's downloaded browser cache; this is a fresh-folder/profile test, not a second physical machine.
+- A later diagnostic confirmed HTTP 200 nonempty JavaScript responses and React bindings on the search input while filtering remained unresponsive. Missing script downloads were not observed in that probe. The external storefront failure remains open; it was not hidden by skipping or weakening cart assertions.
 
-## Blocked Submission Gates
+## Remaining Limitations
 
-1. **Prompt invocation and model-session hook firing**: restricted qamart-planner invocation of /review-flaky-test failed before the model ran. Copilot reported HTTP 401 Bad credentials. Both prompt files are discovered and packaged, but neither has completed a real model-driven invocation. Executing hook scripts with fixtures is not claimed as lifecycle firing inside a model session.
-2. **UI discovery**: CLI inventory confirms the plugin is enabled. VS Code agent picker, slash-menu, and hooks panel require a new authenticated session and remain manually unverified.
-	CLI instruction list also returned an empty list with both installed and explicit plugin loading. Rule files are schema-valid, packaged in the documented namespace, and referenced by prompts/agents, but automatic rule injection is not verified for this CLI version.
-3. **GitHub push**: gh auth status reports an invalid stored token for the existing account; Git was not found on PATH. No remote repository was created and no URL is claimed.
-4. **Class chat**: no class-chat integration is available. The tester must share the actual published URL after authentication and push.
-5. **Current cart regression**: preserve and triage the failing add-to-bag assertion against the approved deployment. The real login and checkout validation tests have passed, but the latest full browser suite is not green.
+1. **Native rule injection and editor UI**: CLI lists both agents, skills, commands, and MCP servers. Both rule files were read in live authenticated demos. Automatic native plugin-rule injection and VS Code picker/panel rendering remain manually unverified for this client version. The opt-in setup-workspace helper provides verified always-on workspace instructions without overwriting existing rules.
+2. **Class chat**: no class-chat integration is available. Share https://github.com/chetdbhat/qa-mart-testkit manually.
+3. **Current cart regression**: preserve and triage the failing add-to-bag assertion against the approved deployment. Login/checkout validation and 7 newly generated checkout tests passed, but the full cart-inclusive suite is not green.
+4. **Normal-profile update lock**: VS Code held the existing user plugin directory open during a refresh. New isolated installs work. Close sessions using the old plugin before updating that copy; no user processes were terminated.
 
 ## Finish The Live Demo
 
-Authenticate directly with `gh auth login` or Copilot `/login`; never send tokens through chat.
-Install Git if absent, review staged files, then use the README publish commands.
-Install the published plugin, reload VS Code in the Copilot harness, and check both agents, both skills, both prompts, two rule files, hooks, and two MCP servers.
-Invoke /gen-smoke-tests for QM-CART-001 and /review-flaky-test on its sanitized result. Confirm the pre/post hooks in Copilot diagnostics, then execute the generated focused test.
-Only after that, mark the blocked gates complete and share the repository link in the class chat.
+Install the published plugin with Git available, reload VS Code in the Copilot harness, and check the editor customization panels.
+Run `npm run verify:live` and `npm run verify:live:generate` to reproduce both authenticated prompts, live hooks, and real generated checkout tests.
+Use the workspace instruction helper if this client does not inject native plugin rules. Keep the cart regression visible and share the public repository URL in class chat.
 
 ## Draft Cart Defect
 
@@ -78,5 +85,7 @@ npm test
 npm run verify:mcp
 npm run verify:clean
 npm run verify:clean:validation
+npm run verify:live
+npm run verify:live:generate
 npm run package:plugin
 ```

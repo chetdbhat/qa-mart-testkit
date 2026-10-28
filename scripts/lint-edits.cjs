@@ -1,9 +1,10 @@
 const fs = require('node:fs');
 const { spawnSync } = require('node:child_process');
-const { parseEvent, changedSpecs, violations, editTool } = require('./test-policy.cjs');
+const { auditHook, parseEvent, changedSpecs, violations, editTool } = require('./test-policy.cjs');
 
 try {
   const event = parseEvent(fs.readFileSync(0, 'utf8'));
+  auditHook('postToolUse', event.name);
   if (!editTool.test(event.name)) {
     process.stdout.write('{}');
   } else {

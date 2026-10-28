@@ -6,6 +6,14 @@ const hardWait = /\bwaitForTimeout\s*\(|\b(?:sleep|Start-Sleep)\b/;
 const specPath = /\.(?:spec|test)\.[cm]?[jt]sx?$/i;
 const editTool = /(?:^|\/)(?:create|edit|apply_patch|str_replace_editor|write|Write|Edit|create_file|replace_string_in_file|multi_replace_string_in_file)$/;
 
+function auditHook(hook, tool) {
+  const directory = process.env.QAMART_HOOK_AUDIT_DIR;
+  if (!directory) return;
+  if (!path.isAbsolute(directory)) throw new Error('Hook audit directory must be absolute');
+  fs.mkdirSync(directory, { recursive: true });
+  fs.appendFileSync(path.join(directory, 'hooks.jsonl'), JSON.stringify({ timestamp: new Date().toISOString(), hook, tool }) + '\n');
+}
+
 function parseEvent(raw) {
   const event = JSON.parse(raw);
   if (!event || typeof event !== 'object' || Array.isArray(event)) throw new Error('Invalid event');
@@ -54,4 +62,4 @@ function changedSpecs(event) {
   });
 }
 
-module.exports = { parseEvent, violations, proposedText, changedSpecs, focused, specPath, editTool };
+module.exports = { auditHook, parseEvent, violations, proposedText, changedSpecs, focused, specPath, editTool };
