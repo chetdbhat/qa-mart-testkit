@@ -33,6 +33,7 @@ Current package update: 1.0.1. Authentication and live agent verification were c
 | Plugin-generated real tests | 7 passed, 0 failed, exit 0 | Six required contact/delivery cases plus malformed email; real QA Mart Chromium run, 46.2 seconds; no order submission |
 | GitHub publication | PASS | Authenticated Git Data API commit verified against remote manifest; no local Git dependency for publishing |
 | Published-repository installation | PASS, exit 0 | chetdbhat/qa-mart-testkit installed and enabled in a separate COPILOT_HOME using checksum-verified portable Git; initial remote version 1.0.0 |
+| Final public marketplace install | PASS, exit 0 | Fresh COPILOT_HOME registered chetdbhat/qa-mart-testkit as qamart-qa, then installed qa-mart-testkit@qamart-qa; CLI inventory confirmed version 1.0.1 enabled |
 
 Machine-local proof: `.artifacts/clean-install-proof.json`, `.artifacts/last-clean-install-attempt.json`, and `.artifacts/mcp-proof.json`. Read the scope field; a validation-only run does not cover cart.
 The clean-install proof records the temporary installed path; its HTML report is under that path's playwright-report directory.
