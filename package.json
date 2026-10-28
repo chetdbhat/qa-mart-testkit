@@ -1,6 +1,6 @@
 {
-  "name": "qa-mart-testkit",
-  "version": "1.0.1",
+  "name": "chetanbhat",
+  "version": "1.0.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,7 +15,7 @@
     "verify:live": "node scripts/verify-live.mjs",
     "verify:live:generate": "node scripts/verify-live.mjs --generate",
     "build:plugin": "node scripts/build-dist.mjs",
-    "package:plugin": "node scripts/build-dist.mjs && npm pack ./.artifacts/dist/qa-mart-testkit"
+    "package:plugin": "node scripts/build-dist.mjs && npm pack ./.artifacts/dist/chetanbhat"
   },
   "files": ["plugin.json", "mcp.json", "com.github.copilot", "skills", "scripts", "tests", "playwright.config.mjs", "README.md", "docs", ".github/plugin", "npm-shrinkwrap.json"],
   "devDependencies": {

@@ -6,6 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
+const pluginName = JSON.parse(readFileSync(path.join(root, 'plugin.json'), 'utf8')).name;
 const temporary = mkdtempSync(path.join(tmpdir(), 'qamart-clean-'));
 const home = path.join(temporary, 'copilot-home');
 const workspace = path.join(temporary, 'fresh-workspace');
@@ -26,10 +27,10 @@ function run(command, args, cwd = workspace) {
   return result.stdout;
 }
 run(process.execPath, [path.join(root, 'scripts/build-dist.mjs')], root);
-const source = path.join(root, '.artifacts/dist/qa-mart-testkit');
+const source = path.join(root, '.artifacts/dist', pluginName);
 run(copilot, ['plugin', 'install', source]);
 const inventory = JSON.parse(run(copilot, ['plugin', 'list', '--json']));
-assert.ok(inventory.some(plugin => plugin.name === 'qa-mart-testkit' && plugin.enabled));
+assert.ok(inventory.some(plugin => plugin.name === pluginName && plugin.enabled));
 function findPlugin(directory, depth = 0) {
   if (depth > 6) return;
   if (existsSync(path.join(directory, 'plugin.json'))) return directory;

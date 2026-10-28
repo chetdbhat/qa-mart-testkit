@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
+const pluginName = JSON.parse(readFileSync(path.join(root, 'plugin.json'), 'utf8')).name;
 const generate = process.argv.includes('--generate');
 const output = path.join(root, generate ? '.artifacts/live-generation' : '.artifacts/live-verification');
 const audit = path.join(output, 'audit');
@@ -18,7 +19,7 @@ function run(command, args) {
   assert.equal(result.status, 0, `Live verification command failed (${result.status}): ${result.error?.message || command}`);
 }
 run(process.execPath, [path.join(root, 'scripts/build-dist.mjs')]);
-run(copilot, ['plugin', 'install', path.join(root, '.artifacts/dist/qa-mart-testkit')]);
+run(copilot, ['plugin', 'install', path.join(root, '.artifacts/dist', pluginName)]);
 const transcript = path.join(output, generate ? 'generation-session.md' : 'review-session.md');
 const generatedDirectory = path.join(root, '.artifacts/generated');
 mkdirSync(generatedDirectory, { recursive: true });
@@ -29,7 +30,7 @@ const prompt = generate
   ? '/gen-smoke-tests QM-CHECKOUT-001. Inspect only https://qamart.vercel.app/checkout using the browser navigate and snapshot tools. Read com.github.copilot/rules/playwright.instructions.md, com.github.copilot/rules/safety.instructions.md, skills/checkout-test-design/SKILL.md, and tests/e2e/checkout.spec.mjs directly. Generate one runnable JavaScript Playwright test at .artifacts/generated/checkout-required.spec.mjs only. Cover observed required contact/delivery inputs and invalid email without clicking Place demo order or submitting. Import test and expect from @playwright/test. No shell, glob, arbitrary browser evaluation, hard waits, retries, or tracked file edits. State that execution remains for the tester.'
   : '/review-flaky-test tests/e2e/cart.spec.mjs. Read exactly com.github.copilot/rules/playwright.instructions.md, com.github.copilot/rules/safety.instructions.md, skills/bug-report-writer/SKILL.md, and tests/e2e/cart.spec.mjs. No shell, edits, or glob. In five lines, distinguish the known Bag 0 failure from unverified causes and preserve all business assertions.';
 run(copilot, [
-  '--agent', generate ? 'qa-mart-testkit:qamart-generator' : 'qa-mart-testkit:qamart-planner',
+  '--agent', `${pluginName}:${generate ? 'qamart-generator' : 'qamart-planner'}`,
   '--available-tools', ...available, '--allow-tool', 'view', ...permissions,
   '--disable-builtin-mcps', ...(!generate ? ['--disable-mcp-server', 'qamart-browser'] : []), '--disable-mcp-server', 'qamart-docs',
   '--trust-folder', '--log-dir', path.join(output, 'logs'), '--share', transcript,
@@ -47,6 +48,6 @@ assert.ok(existsSync(auditFile), 'No live hook audit file was produced');
 const events = readFileSync(auditFile, 'utf8').trim().split('\n').map(line => JSON.parse(line));
 assert.ok(events.some(event => event.hook === 'preToolUse'), 'preToolUse did not fire');
 assert.ok(events.some(event => event.hook === 'postToolUse'), 'postToolUse did not fire');
-const proof = { timestamp: new Date().toISOString(), agent: generate ? 'qa-mart-testkit:qamart-generator' : 'qa-mart-testkit:qamart-planner', prompt: generate ? '/gen-smoke-tests' : '/review-flaky-test', generatedSpec: generate ? generatedSpec : undefined, exitCode: 0, preToolUse: events.filter(event => event.hook === 'preToolUse').length, postToolUse: events.filter(event => event.hook === 'postToolUse').length, transcript };
+const proof = { timestamp: new Date().toISOString(), agent: `${pluginName}:${generate ? 'qamart-generator' : 'qamart-planner'}`, prompt: generate ? '/gen-smoke-tests' : '/review-flaky-test', generatedSpec: generate ? generatedSpec : undefined, exitCode: 0, preToolUse: events.filter(event => event.hook === 'preToolUse').length, postToolUse: events.filter(event => event.hook === 'postToolUse').length, transcript };
 writeFileSync(path.join(output, 'proof.json'), JSON.stringify(proof, null, 2));
 console.log(`PASS: authenticated ${proof.prompt}; ${proof.preToolUse} pre-tool and ${proof.postToolUse} post-tool lifecycle events verified`);

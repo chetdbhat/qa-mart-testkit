@@ -1,6 +1,6 @@
 {
   "name": "qamart-qa",
   "owner": { "name": "QA Mart Testers" },
-  "metadata": { "description": "QA Mart testing workflow plugins", "version": "1.0.1" },
-  "plugins": [{ "name": "qa-mart-testkit", "source": "./", "version": "1.0.1", "description": "Safe QA Mart testing with Playwright" }]
+  "metadata": { "description": "QA Mart testing workflow plugins", "version": "1.0.2" },
+  "plugins": [{ "name": "chetanbhat", "source": "./", "version": "1.0.2", "description": "Safe QA Mart testing with Playwright" }]
 }

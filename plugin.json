@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-  "name": "qa-mart-testkit",
-  "version": "1.0.1",
+  "name": "chetanbhat",
+  "version": "1.0.2",
   "homepage": "https://github.com/chetdbhat/qa-mart-testkit",
   "repository": "https://github.com/chetdbhat/qa-mart-testkit",
   "description": "Evidence-first QA Mart smoke testing with Playwright, scoped agents, and safety hooks.",

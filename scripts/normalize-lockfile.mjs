@@ -19,7 +19,9 @@ for (const entry of Object.values(lock.packages)) {
   assert.equal(new URL(entry.resolved).origin, 'https://registry.npmjs.org', 'Lockfile must use the public npm registry');
   assert.ok(entry.integrity, 'Pinned dependency must retain an integrity hash');
 }
+lock.name = manifest.name;
 lock.version = manifest.version;
+lock.packages[''].name = manifest.name;
 lock.packages[''].version = manifest.version;
 writeFileSync(lockPath, JSON.stringify(lock, null, 2) + '\n');
 console.log(`PASS: normalized ${normalized} registry URLs; pinned versions and integrity hashes retained; version ${manifest.version}`);

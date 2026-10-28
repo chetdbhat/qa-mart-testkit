@@ -1,4 +1,4 @@
-# QA Mart Testkit
+# Chetanbhat: QA Mart Testkit
 
 Installable GitHub Copilot Agent Plugins 1.0 bundle for https://qamart.vercel.app.
 Protects login validation, bag quantity/totals, and checkout pre-submit validation.
@@ -18,7 +18,7 @@ From a downloaded or cloned copy, build the dependency-free distribution first:
 ```powershell
 npm ci
 npm run build:plugin
-copilot plugin install "./.artifacts/dist/qa-mart-testkit"
+copilot plugin install "./.artifacts/dist/chetanbhat"
 copilot plugin list --json
 ```
 
@@ -28,7 +28,8 @@ VS Code discovers default-home CLI installs. Reload VS Code, select Copilot, the
 An isolated COPILOT_HOME install is deliberately not registered in your normal VS Code profile.
 Review executable hooks/MCP trust before enabling. Do not use blanket allow-all permissions.
 
-Marketplace alternative: `copilot plugin marketplace add chetdbhat/qa-mart-testkit`, then `copilot plugin install qa-mart-testkit@qamart-qa`.
+Marketplace install: `copilot plugin marketplace add chetdbhat/qa-mart-testkit`, then `copilot plugin install chetanbhat@qamart-qa`.
+The plugin is named `chetanbhat` from version 1.0.2 onward. The repository remains `chetdbhat/qa-mart-testkit` and the marketplace remains `qamart-qa`.
 The current CLI warns that direct installs may be deprecated in a future release.
 
 ## Six Components
@@ -52,7 +53,7 @@ The marketplace catalog is at `.github/plugin/marketplace.json`.
 3. In a terminal, run `npx playwright test tests/e2e/checkout.spec.mjs`. Show the real required-field and email validation assertions. Run `npm run demo` separately to include the known cart regression; do not call the full suite green.
 4. Invoke `/review-flaky-test tests/e2e/cart.spec.mjs` with a sanitized failure, or run `npm test` to demonstrate the hook rejecting a focused test without editing the real suite.
 
-CLI agent IDs are qualified: `qa-mart-testkit:qamart-planner` and `qa-mart-testkit:qamart-generator`.
+CLI agent IDs are qualified: `chetanbhat:qamart-planner` and `chetanbhat:qamart-generator`.
 `npm run verify:live` verifies the authenticated review prompt and both lifecycle hooks in an isolated profile.
 `npm run verify:live:generate` inspects real checkout, generates a spec in the ignored demo folder, and runs it. The recorded demo produced 7 passing tests without submitting an order.
 Live proof and transcripts stay under `.artifacts/`; hook audit contains only timestamps, lifecycle names, and tool names, never arguments or results.

@@ -69,7 +69,8 @@ assert.ok(branch);
 if (process.argv.includes('--update')) {
   const existing = api(`repos/${repository}/contents/plugin.json?ref=${encodeURIComponent(branch)}`);
   const existingManifest = JSON.parse(Buffer.from(existing.content, 'base64').toString('utf8'));
-  assert.equal(existingManifest.name, repositoryName, 'Refusing to update an unrelated repository');
+  const localManifest = JSON.parse(readFileSync(path.join(root, 'plugin.json'), 'utf8'));
+  assert.ok([repositoryName, localManifest.name].includes(existingManifest.name), 'Refusing to update an unrelated repository');
 }
 const head = api(`repos/${repository}/git/ref/heads/${encodeURIComponent(branch)}`);
 const base = api(`repos/${repository}/git/commits/${head.object.sha}`);

@@ -4,7 +4,7 @@ Validation date: 2026-10-28. Target: https://qamart.vercel.app, discovered publi
 No project URL or source was provided. Confirm that this is the cohort's intended deployment.
 
 Published repository: https://github.com/chetdbhat/qa-mart-testkit
-Current package update: 1.0.1. Authentication and live agent verification were completed after the initial blocked attempt.
+Current package update: 1.0.2, plugin name `chetanbhat`, marketplace `qamart-qa`. Historical 1.0.0/1.0.1 evidence below refers to the previous plugin name `qa-mart-testkit`. Authentication and live agent verification were completed after the initial blocked attempt.
 
 ## Verified
 
